@@ -17,41 +17,27 @@ import java.util.ArrayList;
 import java.util.List;
 
 class XSSFSheetEventHandler extends DefaultHandler {
-
-    /**
-     * Table with styles
-     */
+    // Table with styles
     private StylesTable stylesTable;
 
-    /**
-     * Table with unique strings
-     */
+    // Table with unique strings
     private ReadOnlySharedStringsTable sharedStringsTable;
-
     private List<?> list = new ArrayList();
-
     private SheetModel sheetModel;
-
-    /**
-     * Number of columns to read starting with leftmost
-     */
+    // Number of columns to read starting with leftmost
     private final int minColumnCount;
-
     // Set when V start element is seen
     private boolean vIsOpen;
     private String sqref;
-
     // Set when cell start element is seen;
     // used when cell close element is seen.
     private XSSFDataTypes nextDataType;
-
     // Used to format numeric cell values.
     private short formatIndex;
     private String formatString;
     private final DataFormatter formatter;
     // The last column printed to the output stream
     private int lastColumnNumber = -1;
-
     // Gathers characters as they are seen.
     private StringBuffer value;
     private int dataType;
@@ -79,7 +65,6 @@ class XSSFSheetEventHandler extends DefaultHandler {
 
     public void startElement(String uri, String localName, String name,
                              Attributes attributes) throws SAXException {
-
         if ("inlineStr".equals(name) || "v".equals(name)) {
             vIsOpen = true;
             // Clear contents cache
@@ -117,7 +102,7 @@ class XSSFSheetEventHandler extends DefaultHandler {
                     this.formatString = BuiltinFormats
                             .getBuiltinFormat(this.formatIndex);
             }
-        }else if ("dataValidation".equals(name)){
+        } else if ("dataValidation".equals(name)) {
 
             String dvXmlType = attributes.getValue("type");
             sqref = attributes.getValue("sqref");
@@ -127,7 +112,7 @@ class XSSFSheetEventHandler extends DefaultHandler {
             }
             System.out.println("At data validation start");
 
-        }else if(name.startsWith("formula")){
+        } else if(name.startsWith("formula")) {
             vIsOpen = true;
             value = new StringBuffer();
             System.out.println("At Formula start");
@@ -138,7 +123,6 @@ class XSSFSheetEventHandler extends DefaultHandler {
     public void endElement(String uri, String localName, String name)
             throws SAXException {
         String thisStr = null;
-
         if (vIsOpen) {
             if ("v".equals(name) || "is".equals(name)) {
                 vIsOpen = false;
@@ -152,41 +136,33 @@ class XSSFSheetEventHandler extends DefaultHandler {
                         System.out.println(value.toString());
                         break;
                 }
-
                 vIsOpen = false;
                 value = null;
             }
         }
-
-
         // v => contents of a cell
         if ("v".equals(name)) {
             // Process the value contents as required.
             // Do now, as characters() may be called more than once
             switch (nextDataType) {
-
                 case BOOL:
                     char first = value.charAt(0);
                     thisStr = first == '0' ? "FALSE" : "TRUE";
                     break;
-
                 case ERROR:
                     thisStr = "\"ERROR:" + value.toString() + '"';
                     break;
-
                 case FORMULA:
                     // A formula could result in a string value,
                     // so always add double-quote characters.
                     thisStr = '"' + value.toString() + '"';
                     break;
-
                 case INLINESTR:
                     // TODO: have seen an example of this, so it's untested.
                     XSSFRichTextString rtsi = new XSSFRichTextString(value
                             .toString());
                     thisStr = '"' + rtsi.toString() + '"';
                     break;
-
                 case SSTINDEX:
                     String sstIndex = value.toString();
                     try {
@@ -198,7 +174,6 @@ class XSSFSheetEventHandler extends DefaultHandler {
 
                     }
                     break;
-
                 case NUMBER:
                     String n = value.toString();
                     if (this.formatString != null)
@@ -208,23 +183,18 @@ class XSSFSheetEventHandler extends DefaultHandler {
                     else
                         thisStr = n;
                     break;
-
                 default:
                     thisStr = "(TODO: Unexpected type: " + nextDataType + ")";
                     break;
             }
-
             // Output after we've seen the string contents
             // Emit commas for any fields that were missing on this row
             if (lastColumnNumber == -1) {
                 lastColumnNumber = 0;
             }
-
         } else if ("row".equals(name)) {
             sheetModel.setNumberOfRows(sheetModel.getNumberOfRows()+1);
-        }
-
-        else if ("dataValidation".equals(name)) {
+        } else if ("dataValidation".equals(name)) {
 
             if (dataType == DataValidationConstraint.ValidationType.LIST)
             {
@@ -232,10 +202,7 @@ class XSSFSheetEventHandler extends DefaultHandler {
             }
             System.out.println("At datavalidation end");
         }
-
-
     }
-
     /**
      * Captures characters only if a suitable element is open. Originally
      * was just "v"; extended for inlineStr also.

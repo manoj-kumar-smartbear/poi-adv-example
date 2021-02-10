@@ -1,8 +1,5 @@
 package com.poi.example.model;
 
-/**
- * Created by Lenovo on 17/09/2018.
- */
 public class Resident {
     String name;
     String nationalId;

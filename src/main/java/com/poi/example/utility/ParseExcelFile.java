@@ -19,9 +19,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.PrintStream;
 
-/**
- * Created by Lenovo on 14/11/2018.
- */
 public class ParseExcelFile {
 
     private OPCPackage xlsxPackage;

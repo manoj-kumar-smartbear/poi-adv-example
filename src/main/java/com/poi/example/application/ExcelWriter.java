@@ -1,8 +1,6 @@
 package com.poi.example.application;
 
-import com.poi.example.Application;
-import com.poi.example.utility.ExcelUtil;
-import org.springframework.boot.SpringApplication;
+import com.poi.example.utility.WriteExcelParser;
 
 import java.util.Date;
 
@@ -15,7 +13,7 @@ public class ExcelWriter {
 
         try {
             // Write workbook
-            ExcelUtil.buildFile(FILE_NAME);
+            WriteExcelParser.buildFile(FILE_NAME);
         } catch(Error e) {
             e.printStackTrace();
         } catch(Exception ex) {

@@ -12,36 +12,50 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ExcelUtil {
+public class WriteExcelParser {
+    public static final String NAME = "NAME";
+    public static final String NATIONAL_ID = "NID";
+    public static final String AGE = "AGE";
+    public static final  String MOBILE = "MOBILE";
+    public static final String EMAIL = "EMAIL";
+    public static final String ADDRESS = "ADDRESS";
+    
     public static Boolean buildFile(String fileName) throws IOException {
+        Workbook wb = null;
+        FileOutputStream fos = null;
         List<Resident> residentList = new ArrayList<>();
+        try {
+            for(int i = 0; i<1048570; i++) {
+                Resident resident = new Resident();
+                resident.setName("Name"+i);
+                resident.setMobile("0142485824" + i);
+                resident.setAddress("ABC" + i);
+                resident.setEmail("count" + i + "@gmail.com");
+                resident.setNationalId("8687678687687" + i);
+                resident.setAge(i+30);
+                residentList.add(resident);
+            }
 
-        for(int i = 0; i<1048570; i++) {
-            Resident resident = new Resident();
-            resident.setName("Name"+i);
-            resident.setMobile("0142485824" + i);
-            resident.setAddress("ABC" + i);
-            resident.setEmail("count" + i + "@gmail.com");
-            resident.setNationalId("8687678687687" + i);
-            resident.setAge(i+30);
-            residentList.add(resident);
+            List<String> residentHeaders = new ArrayList<>();
+            residentHeaders.add(NAME);
+            residentHeaders.add(ADDRESS);
+            residentHeaders.add(MOBILE);
+            residentHeaders.add(EMAIL);
+            residentHeaders.add(AGE);
+            residentHeaders.add(NATIONAL_ID);
+
+            wb = buildWorkbook(residentHeaders,"TEST_SHEET", residentList);
+
+            fos = new FileOutputStream(fileName);
+            wb.write(fos);
+        } catch(Exception ex) {
+            ex.printStackTrace();
+        } finally{
+            if(wb != null){
+                try{wb.close();}catch (Exception e){}
+            }
+            try{fos.close();} catch (Exception e) {}
         }
-
-        List<String> residentHeaders = new ArrayList<>();
-        residentHeaders.add(ExcelFileHeaderConstants.NAME);
-        residentHeaders.add(ExcelFileHeaderConstants.ADDRESS);
-        residentHeaders.add(ExcelFileHeaderConstants.MOBILE);
-        residentHeaders.add(ExcelFileHeaderConstants.EMAIL);
-        residentHeaders.add(ExcelFileHeaderConstants.AGE);
-        residentHeaders.add(ExcelFileHeaderConstants.NATIONAL_ID);
-
-        Workbook workbook = buildWorkbook(residentHeaders,"TEST_SHEET", residentList);
-
-        FileOutputStream outputStream = new FileOutputStream(fileName);
-        workbook.write(outputStream);
-        outputStream.close();
-        workbook.close();
-
         return true;
     }
 

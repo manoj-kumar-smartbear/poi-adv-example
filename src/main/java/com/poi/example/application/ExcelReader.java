@@ -1,17 +1,9 @@
 package com.poi.example.application;
 
-import com.poi.example.Application;
-import com.poi.example.model.Resident;
-import com.poi.example.utility.ParseExcelFile;
-import org.apache.poi.openxml4j.exceptions.OpenXML4JException;
-import org.apache.poi.openxml4j.opc.OPCPackage;
-import org.springframework.boot.SpringApplication;
-import org.xml.sax.SAXException;
+import com.poi.example.utility.ReadExcelParser;
 
-import javax.xml.parsers.ParserConfigurationException;
-import java.io.File;
-import java.io.IOException;
 import java.util.Date;
+import java.util.List;
 
 public class ExcelReader {
     public static void main(String[] args) {
@@ -22,7 +14,8 @@ public class ExcelReader {
 
         try {
             // Read workbook
-            readFile(FILE_NAME);
+            ReadExcelParser excelReader = new ReadExcelParser(FILE_NAME, 10);
+            List<ReadExcelParser.Row> data = excelReader.process();
         } catch(Error e) {
             e.printStackTrace();
         } catch(Exception ex) {
@@ -33,14 +26,5 @@ public class ExcelReader {
             System.out.println("EXCEL READ PROCESS ---> FINISH AT --> " + new Date());
             System.out.println("TOTAL EXECUTION TIME: " + timeElapsed + " milliseconds");
         }
-    }
-    private static void readFile(String fileName)
-            throws IOException, OpenXML4JException, ParserConfigurationException, SAXException {
-
-        File file = new File(fileName);
-        OPCPackage opcPackage = OPCPackage.open(file);
-        ParseExcelFile parsedFile = new ParseExcelFile(opcPackage,10, Resident.class);
-        boolean isValid = parsedFile.process();
-        System.out.println("File is valid ? " + isValid);
     }
 }

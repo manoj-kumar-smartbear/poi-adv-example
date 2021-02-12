@@ -10,12 +10,13 @@ public class ExcelReader {
         final String FILE_NAME = "Resident_INFO.xlsx";
 
         long startTime = System.currentTimeMillis();
-        System.out.println("EXCEL READ PROCESS ---> START AT --> " + new Date());
+        System.out.println("EXCEL READ PROCESS ---> STARTED AT --> " + new Date());
 
         try {
-            // Read workbook
+            // Read Excel
             ReadExcelParser excelReader = new ReadExcelParser(FILE_NAME, 10);
             List<ReadExcelParser.Row> data = excelReader.process();
+            System.out.println("TOTAL ROWS READ --> " + data.size());
         } catch(Error e) {
             e.printStackTrace();
         } catch(Exception ex) {
@@ -23,8 +24,8 @@ public class ExcelReader {
         } finally {
             long endTime = System.currentTimeMillis();
             long timeElapsed = endTime - startTime;
-            System.out.println("EXCEL READ PROCESS ---> FINISH AT --> " + new Date());
-            System.out.println("TOTAL EXECUTION TIME: " + timeElapsed + " milliseconds");
+            System.out.println("EXCEL READ PROCESS ---> FINISHED AT --> " + new Date());
+            System.out.println("TOTAL EXECUTION TIME --> " + timeElapsed + " milliseconds");
         }
     }
 }

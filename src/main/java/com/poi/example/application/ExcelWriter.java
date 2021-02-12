@@ -9,10 +9,10 @@ public class ExcelWriter {
         final String FILE_NAME = "Resident_INFO.xlsx";
 
         long startTime = System.currentTimeMillis();
-        System.out.println("EXCEL WRITE PROCESS ---> START AT --> " + new Date());
+        System.out.println("EXCEL WRITE PROCESS ---> STARTED AT --> " + new Date());
 
         try {
-            // Write workbook
+            // Write Excel
             WriteExcelParser.buildFile(FILE_NAME);
         } catch(Error e) {
             e.printStackTrace();
@@ -21,7 +21,7 @@ public class ExcelWriter {
         } finally {
             long endTime = System.currentTimeMillis();
             long timeElapsed = endTime - startTime;
-            System.out.println("EXCEL WRITE PROCESS ---> FINISH AT --> " + new Date());
+            System.out.println("EXCEL WRITE PROCESS ---> FINISHED AT --> " + new Date());
             System.out.println("TOTAL EXECUTION TIME ---> " + timeElapsed + " milliseconds");
         }
     }
